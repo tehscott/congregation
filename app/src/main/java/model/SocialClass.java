@@ -57,13 +57,14 @@ public enum SocialClass {
 
     // TODO make this based on more stats?
     public static SocialClass generateSocialClass() {
-        double random = Math.random();
-
         float lower = LOWER.getProbability();
         float working = lower + WORKING.getProbability();
-        float middle = working + WORKING.getProbability();
-        float upper = middle + WORKING.getProbability();
-        float elite = upper + WORKING.getProbability();
+        float middle = working + MIDDLE.getProbability();
+        float upper = middle + UPPER.getProbability();
+        float elite = upper + ELITE.getProbability();
+        float superElite = elite + SUPER_ELITE.getProbability();
+
+        double random = Math.random() * superElite;
 
         if(random <= lower) {
             return LOWER;
@@ -93,7 +94,7 @@ public enum SocialClass {
             case 4:
                 return .024f;
             case 5:
-                return .001f;
+                return .0005f;
         }
 
         return -1;
