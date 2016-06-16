@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.security.InvalidParameterException;
 import java.util.Properties;
 
+import util.Util;
+
 public class Name {
     private static String[] maleFirstNames;
     private static String[] femaleFirstNames;
@@ -53,19 +55,19 @@ public class Name {
             String lastName = "";
 
             if(person.mGender == Gender.MALE) {
-                firstName = Name.maleFirstNames[(int) (Math.random() * (Name.maleFirstNames.length - 1))];
+                firstName = Name.maleFirstNames[Util.generateRandomIntInRange(0, Name.maleFirstNames.length - 1)];
             } else {
-                firstName = Name.femaleFirstNames[(int) (Math.random() * (Name.femaleFirstNames.length - 1))];
+                firstName = Name.femaleFirstNames[Util.generateRandomIntInRange(0, Name.femaleFirstNames.length - 1)];
             }
 
             if(person.mRace == Race.WHITE) {
-                lastName = Name.whiteLastNames[(int) (Math.random() * (Name.whiteLastNames.length - 1))];
+                lastName = Name.whiteLastNames[Util.generateRandomIntInRange(0, Name.whiteLastNames.length - 1)];
             } else if(person.mRace == Race.ASIAN) {
-                lastName = Name.asianLastNames[(int) (Math.random() * (Name.asianLastNames.length - 1))];
+                lastName = Name.asianLastNames[Util.generateRandomIntInRange(0, Name.asianLastNames.length - 1)];
             } else if(person.mRace == Race.BLACK) {
-                lastName = Name.blackLastNames[(int) (Math.random() * (Name.blackLastNames.length - 1))];
+                lastName = Name.blackLastNames[Util.generateRandomIntInRange(0, Name.blackLastNames.length - 1)];
             } else if(person.mRace == Race.HISPANIC) {
-                lastName = Name.hispanicLastNames[(int) (Math.random() * (Name.hispanicLastNames.length - 1))];
+                lastName = Name.hispanicLastNames[Util.generateRandomIntInRange(0, Name.hispanicLastNames.length - 1)];
             }
 
             return firstName + " " + lastName;

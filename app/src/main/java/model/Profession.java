@@ -1,5 +1,7 @@
 package model;
 
+import util.Util;
+
 /**
  * Created by SStrombe on 6/11/16.
  */
@@ -1034,16 +1036,16 @@ public class Profession {
             float unemployedChance;
 
             if(person.mEducationLevel == EducationLevel.HIGH_SCHOOL) {
-                index = (int)(Math.random() * ((210) + 1));
+                index = Util.generateRandomIntInRange(0, 210);
                 unemployedChance = 0.094f;
             } else if(person.mEducationLevel == EducationLevel.SOME_COLLEGE) {
-                index = 211 + (int)(Math.random() * ((360 - 211) + 1));
+                index = Util.generateRandomIntInRange(211, 360);
                 unemployedChance = 0.068f;
             } else if(person.mEducationLevel == EducationLevel.COLLEGE_GRADUATE) {
-                index = 361 + (int)(Math.random() * ((630 - 361) + 1));
+                index = Util.generateRandomIntInRange(361, 630);
                 unemployedChance = 0.049f;
             } else {
-                index = 631 + (int)(Math.random() * ((professions.length - 1 - 631) + 1));
+                index = Util.generateRandomIntInRange(631, professions.length - 1);
                 unemployedChance = 0.025f;
             }
 
@@ -1066,7 +1068,7 @@ public class Profession {
                     baseRetirementSalary = 100000000;
                 }
 
-                return new String[] { "Retired", String.valueOf((int)(baseRetirementSalary * Person.getRandomFloatInRange(.8f, 1.2f)))};
+                return new String[] { "Retired", String.valueOf((int)(baseRetirementSalary * Util.generateRandomFloatInRange(.8f, 1.2f)))};
             }
 
             if(random <= unemployedChance) {

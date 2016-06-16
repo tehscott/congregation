@@ -2,6 +2,8 @@ package model;
 
 import java.security.InvalidParameterException;
 
+import util.Util;
+
 /**
  * Created by SStrombe on 6/7/16.
  */
@@ -134,7 +136,7 @@ public enum PoliticalView {
             float democratic = republican + DEMOCRATIC.getProbability(person);
             float independent = democratic + INDEPENDENT.getProbability(person);
 
-            double random = Math.random() * independent;
+            double random = Util.generateRandomFloatInRange(0, independent);
 
             if(random <= republican) {
                 return REPUBLICAN;

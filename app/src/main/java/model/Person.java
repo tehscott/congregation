@@ -4,6 +4,11 @@ import android.util.Log;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.List;
+
+import belief.Belief;
+import belief.BeliefCategory;
+import util.Util;
 
 public class Person {
     public float mFaithLevel;
@@ -40,10 +45,10 @@ public class Person {
     // mental and physical health
 
     public Person() {
-        mFaithLevel = (float) (Math.random() * 100);
-        mGullibilityLevel = (float) (Math.random() * 100);
-        mDesireLevel = (float) (Math.random() * 100);
-        mMoralityLevel = (float) (Math.random() * 100);
+        mFaithLevel = Util.generateRandomFloatInRange(0, 100);
+        mGullibilityLevel = Util.generateRandomFloatInRange(0, 100);
+        mDesireLevel = Util.generateRandomFloatInRange(0, 100);
+        mMoralityLevel = Util.generateRandomFloatInRange(0, 100);
         mDevotionLevel = 0;
 
         mGender = Gender.generateGender();
@@ -79,13 +84,13 @@ public class Person {
         float sixtyFour = fourtyFour + .264f;
 
         if(random <= twentyFour) {
-            age = 18 + (int)(Math.random() * ((24 - 18) + 1));
+            age = Util.generateRandomIntInRange(18, 24);
         } else if(random > twentyFour && random <= fourtyFour) {
-            age = 25 + (int)(Math.random() * ((44 - 25) + 1));
+            age = Util.generateRandomIntInRange(25, 44);
         } else if(random > fourtyFour && random <= sixtyFour) {
-            age = 45 + (int)(Math.random() * ((64 - 45) + 1));
+            age = Util.generateRandomIntInRange(45, 64);
         } else {
-            age = 65 + (int)(Math.random() * ((90 - 65) + 1));
+            age = Util.generateRandomIntInRange(65, 90);
         }
 
         return age;
@@ -137,7 +142,7 @@ public class Person {
 
             netWorth = netWorth * variation;
 
-            variation = getRandomFloatInRange(.9f, 1.1f);
+            variation = Util.generateRandomFloatInRange(.9f, 1.1f);
 
             netWorth = netWorth * variation;
 
@@ -176,12 +181,12 @@ public class Person {
             debtMultiplier = 0f;
         }
 
-        return (int)(Math.random() * maxDebt * debtMultiplier);
+        return (int) Util.generateRandomFloatInRange(0, maxDebt * debtMultiplier);
     }
 
     private float generateStartingWeight() {
         if(mGender != null && mAge > 0) {
-            float variation = getRandomFloatInRange(.8f, 1.2f);
+            float variation = Util.generateRandomFloatInRange(.8f, 1.2f);
             float weight = 0;
 
             if(mAge <= 29) {
@@ -230,7 +235,7 @@ public class Person {
 
     private float generateStartingHeight() {
         if(mGender != null && mAge > 0) {
-            float variation = getRandomFloatInRange(.9f, 1.1f);
+            float variation = Util.generateRandomFloatInRange(.9f, 1.1f);
             float height = 0; // inches
 
             if(mAge <= 29) {
@@ -279,21 +284,17 @@ public class Person {
         }
     }
 
+    private List<Belief> generateStartingBeliefs() {
+        for (BeliefCategory beliefCategory : BeliefCategory.values()) {
+
+        }
+    }
+
     public String getHeightString() {
         int feet = (int)(mHeight / 12);
         int inches = (int)(mHeight % 12);
 
         return feet + "'" + " " + inches + "\"";
-    }
-
-    public static float getRandomFloatInRange(float min, float max) {
-        double random = Math.random() * max;
-
-        if(random < min) {
-            random = min;
-        }
-
-        return (float) random;
     }
 
     @Override

@@ -2,6 +2,8 @@ package model;
 
 import java.security.InvalidParameterException;
 
+import util.Util;
+
 /**
  * Created by SStrombe on 6/9/16.
  */
@@ -157,7 +159,7 @@ public enum EducationLevel {
             float collegeGraduate = someCollege + COLLEGE_GRADUATE.getProbability(person);
             float postGraduate = collegeGraduate + POST_GRADUATE.getProbability(person);
 
-            double random = Math.random() * postGraduate;
+            double random = Util.generateRandomFloatInRange(0, postGraduate);
 
 
 

@@ -1,5 +1,7 @@
 package model;
 
+import util.Util;
+
 public enum SocialClass {
     LOWER(0),
     WORKING(1),
@@ -64,7 +66,7 @@ public enum SocialClass {
         float elite = upper + ELITE.getProbability();
         float superElite = elite + SUPER_ELITE.getProbability();
 
-        double random = Math.random() * superElite;
+        double random = Util.generateRandomFloatInRange(0, superElite);
 
         if(random <= lower) {
             return LOWER;
