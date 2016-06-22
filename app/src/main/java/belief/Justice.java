@@ -1,28 +1,47 @@
 package belief;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+
 import util.Util;
 
 /**
  * Created by SStrombe on 6/13/16.
  */
 public class Justice extends Belief {
-    JusticeType mkarmaType;
-    float mLevel;
+    public static int KARMA = 0;
+    public static int REDEMPTION = 1;
+    public static int FORGIVENESS = 2;
+    public static int REVENGE = 3;
 
-    public Justice(JusticeType justiceType, float level, boolean isMajorBelief) {
-        this.mkarmaType = justiceType;
-        this.mLevel = level;
+    public Justice() {}
 
-        init(isMajorBelief);
+    public Justice(int type) {
+        mType = type;
+
+        init();
     }
 
-    public static BeliefCategory getBeliefCategory() {
+    @Override
+    public BeliefCategory getBeliefCategory() {
         return BeliefCategory.JUSTICE;
     }
 
     @Override
     public String getName() {
-        return mkarmaType.getAsString();
+        switch (mType) {
+            case 0:
+                return "Karma";
+            case 1:
+                return "Redemption";
+            case 2:
+                return "Forgiveness";
+            case 3:
+                return "Revenge";
+        }
+
+        return null;
     }
 
     @Override
@@ -31,15 +50,23 @@ public class Justice extends Belief {
     }
 
     @Override
-    public void init(boolean isMajorBelief) {
-        if(isMajorBelief) {
-            mLevel = Util.generateRandomFloatInRange(15, 100);
-        } else {
-            double random = Math.random();
+    public void init() {
+        mLevel = Util.generateRandomFloatInRange(0f, 100f);
+    }
 
-            if(random > 0.5f) {
-                mLevel = Util.generateRandomFloatInRange(0, 0.15f);
-            }
+    @Override
+    public ArrayList<Belief> generateBeliefs() {
+        ArrayList<Belief> beliefs = new ArrayList<>();
+
+        for(int i = 0; i < getMaxNumberOfBeliefs(); i++) {
+            beliefs.add(new Justice(i));
         }
+
+        return beliefs;
+    }
+
+    @Override
+    public int getMaxNumberOfBeliefs() {
+        return 4;
     }
 }

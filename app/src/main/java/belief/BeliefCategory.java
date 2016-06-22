@@ -87,50 +87,5 @@ public enum BeliefCategory {
         }
         return null;
     }
-
-    public static List<Belief> generateBeliefs(BeliefCategory category) {
-        List<Belief> beliefs = new ArrayList<>();
-
-        if(category == Justice.getBeliefCategory()) {
-            // No limit
-            int maxBeliefs = JusticeType.values().length;
-        } else if(category == LifeAfterDeath.getBeliefCategory()) {
-            // Heaven, hell, resurrection, rapture are all compatible (does rapture fit with resurrection?)
-            // Reincarnation doesn't fit with any
-
-            int maxBeliefs = LifeAfterDeathType.values().length;
-        } else if(category == Miracle.getBeliefCategory()) {
-            // No limit
-
-            int maxBeliefs = MiracleType.values().length;
-        } else if(category == Mystics.getBeliefCategory()) {
-            // No limit
-
-            int maxBeliefs = MysticsType.values().length;
-        } else if(category == OriginOfHumanity.getBeliefCategory()) {
-            // Limit 1
-
-            int maxBeliefs = OriginOfHumanityType.values().length;
-        } else if(category == Relationship.getBeliefCategory()) {
-            // Limit 1
-
-            int maxBeliefs = RelationshipType.values().length;
-        } else if(category == ReligiousEvent.getBeliefCategory()) {
-            // Rapture and end of times fit
-            // Enlightenment is on its own
-
-            int maxBeliefs = ReligiousEventType.values().length;
-        } else if(category == Sexuality.getBeliefCategory()) {
-
-        } else if(category == SupernaturalBeing.getBeliefCategory()) {
-
-        } else if(category == Theism.getBeliefCategory()) {
-
-        } else if(category == Worship.getBeliefCategory()) {
-
-        }
-
-        return beliefs;
-    }
 }
 

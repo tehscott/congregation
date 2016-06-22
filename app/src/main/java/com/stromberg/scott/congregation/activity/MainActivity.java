@@ -7,7 +7,8 @@ import android.view.View;
 
 import com.stromberg.scott.congregation.R;
 
-import model.Name;
+import model.Game;
+import personattribute.Name;
 import model.Person;
 
 public class MainActivity extends AppCompatActivity {
@@ -17,14 +18,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Name.init(getBaseContext());
+        init();
+    }
+
+    public void init() {
+        final Game game = new Game(this);
 
         findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 for(int i = 0; i < 1000; i++) {
                     Person person = new Person();
-                    Log.i("PERSON", person.toString());
+
+                    game.getPopulation().addPerson(person);
+
+                    //Log.i("PERSON", person.toString());
                 }
             }
         });

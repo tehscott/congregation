@@ -1,4 +1,4 @@
-package model;
+package personattribute;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.security.InvalidParameterException;
 import java.util.Properties;
 
+import model.Person;
 import util.Util;
 
 public class Name {
@@ -54,19 +55,19 @@ public class Name {
             String firstName = "";
             String lastName = "";
 
-            if(person.mGender == Gender.MALE) {
+            if(person.mGender.getType() == Gender.MALE) {
                 firstName = Name.maleFirstNames[Util.generateRandomIntInRange(0, Name.maleFirstNames.length - 1)];
             } else {
                 firstName = Name.femaleFirstNames[Util.generateRandomIntInRange(0, Name.femaleFirstNames.length - 1)];
             }
 
-            if(person.mRace == Race.WHITE) {
+            if(person.mRace.getType() == Race.WHITE) {
                 lastName = Name.whiteLastNames[Util.generateRandomIntInRange(0, Name.whiteLastNames.length - 1)];
-            } else if(person.mRace == Race.ASIAN) {
+            } else if(person.mRace.getType() == Race.ASIAN) {
                 lastName = Name.asianLastNames[Util.generateRandomIntInRange(0, Name.asianLastNames.length - 1)];
-            } else if(person.mRace == Race.BLACK) {
+            } else if(person.mRace.getType() == Race.BLACK) {
                 lastName = Name.blackLastNames[Util.generateRandomIntInRange(0, Name.blackLastNames.length - 1)];
-            } else if(person.mRace == Race.HISPANIC) {
+            } else if(person.mRace.getType() == Race.HISPANIC) {
                 lastName = Name.hispanicLastNames[Util.generateRandomIntInRange(0, Name.hispanicLastNames.length - 1)];
             }
 

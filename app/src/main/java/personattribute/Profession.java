@@ -1,5 +1,6 @@
-package model;
+package personattribute;
 
+import model.Person;
 import util.Util;
 
 /**
@@ -1035,13 +1036,13 @@ public class Profession {
             int index;
             float unemployedChance;
 
-            if(person.mEducationLevel == EducationLevel.HIGH_SCHOOL) {
+            if(person.mEducationLevel.getType() == EducationLevel.HIGH_SCHOOL) {
                 index = Util.generateRandomIntInRange(0, 210);
                 unemployedChance = 0.094f;
-            } else if(person.mEducationLevel == EducationLevel.SOME_COLLEGE) {
+            } else if(person.mEducationLevel.getType() == EducationLevel.SOME_COLLEGE) {
                 index = Util.generateRandomIntInRange(211, 360);
                 unemployedChance = 0.068f;
-            } else if(person.mEducationLevel == EducationLevel.COLLEGE_GRADUATE) {
+            } else if(person.mEducationLevel.getType() == EducationLevel.COLLEGE_GRADUATE) {
                 index = Util.generateRandomIntInRange(361, 630);
                 unemployedChance = 0.049f;
             } else {
@@ -1054,15 +1055,15 @@ public class Profession {
             if((person.mAge >= 62 && random <= .5f) || person.mAge > 75) {
                 float baseRetirementSalary;
 
-                if (person.mSocialClass == SocialClass.LOWER) {
+                if (person.mSocialClass.getType() == SocialClass.LOWER) {
                     baseRetirementSalary = 35000;
-                } else if (person.mSocialClass == SocialClass.WORKING) {
+                } else if (person.mSocialClass.getType() == SocialClass.WORKING) {
                     baseRetirementSalary = 45000;
-                } else if (person.mSocialClass == SocialClass.MIDDLE) {
+                } else if (person.mSocialClass.getType() == SocialClass.MIDDLE) {
                     baseRetirementSalary = 60000;
-                } else if (person.mSocialClass == SocialClass.UPPER) {
+                } else if (person.mSocialClass.getType() == SocialClass.UPPER) {
                     baseRetirementSalary = 150000;
-                } else if (person.mSocialClass == SocialClass.ELITE) {
+                } else if (person.mSocialClass.getType() == SocialClass.ELITE) {
                     baseRetirementSalary = 1000000;
                 } else {
                     baseRetirementSalary = 100000000;

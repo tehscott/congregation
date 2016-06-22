@@ -1,43 +1,31 @@
-package model;
+package personattribute;
 
 import java.security.InvalidParameterException;
 
+import model.Person;
 import util.Util;
 
 /**
  * Created by SStrombe on 6/7/16.
  */
-public enum PoliticalView {
+public class PoliticalView extends PersonAttribute {
     //http://sarathc.com/different-kinds-of-political-views.html
-    DEMOCRATIC(0),
-    REPUBLICAN(1),
-    INDEPENDENT(2);
+    public static int DEMOCRATIC = 0;
+    public static int REPUBLICAN = 1;
+    public static int INDEPENDENT = 2;
 
-    private int mPoliticalView;
-
-    PoliticalView(int politcalView) {
-        mPoliticalView = politcalView;
+    public PoliticalView(int type) {
+        mType = type;
     }
 
-    public int getAsInt() {
-        return mPoliticalView;
+    @Override
+    public int getTypeCount() {
+        return 0;
     }
 
-    public static PoliticalView getFromInt(int politicalView) {
-
-        switch (politicalView) {
-            case 0:
-                return DEMOCRATIC;
-            case 1:
-                return REPUBLICAN;
-            case 2:
-                return INDEPENDENT;
-        }
-        return null;
-    }
-
-    public String getAsString() {
-        switch (mPoliticalView) {
+    @Override
+    public String getName() {
+        switch (mType) {
             case 0:
                 return "Democratic";
             case 1:
@@ -48,53 +36,53 @@ public enum PoliticalView {
         return null;
     }
 
-    public float getProbability(Person person) {
+    private static float getProbability(Person person, int type) {
         float republicanProbability = 0;
         float democraticProbability = 0;
         float independentProbability = 0;
         int factorCount = 4;
 
-        if(person.mGender == Gender.MALE) {
+        if(person.mGender.getType() == Gender.MALE) {
             republicanProbability = .43f;
             democraticProbability = .44f;
             independentProbability = .13f;
-        } else if(person.mGender == Gender.FEMALE) {
+        } else if(person.mGender.getType() == Gender.FEMALE) {
             republicanProbability = .36f;
             democraticProbability = .52f;
             independentProbability = .12f;
         }
 
-        if(person.mRace == Race.WHITE) {
+        if(person.mRace.getType() == Race.WHITE) {
             republicanProbability += .49f;
             democraticProbability += .40f;
             independentProbability += .11f;
-        } else if(person.mRace == Race.BLACK) {
+        } else if(person.mRace.getType() == Race.BLACK) {
             republicanProbability += .11f;
             democraticProbability += .80f;
             independentProbability += .9f;
-        } else if(person.mRace == Race.HISPANIC) {
+        } else if(person.mRace.getType() == Race.HISPANIC) {
             republicanProbability += .26f;
             democraticProbability += .56f;
             independentProbability += .18f;
-        } else if(person.mRace == Race.ASIAN) {
+        } else if(person.mRace.getType() == Race.ASIAN) {
             republicanProbability += .23f;
             democraticProbability += .65f;
             independentProbability += .12f;
         }
 
-        if(person.mEducationLevel == EducationLevel.HIGH_SCHOOL) {
+        if(person.mEducationLevel.getType() == EducationLevel.HIGH_SCHOOL) {
             republicanProbability += .37f;
             democraticProbability += .47f;
             independentProbability += .16f;
-        } else if(person.mEducationLevel == EducationLevel.SOME_COLLEGE) {
+        } else if(person.mEducationLevel.getType() == EducationLevel.SOME_COLLEGE) {
             republicanProbability += .42f;
             democraticProbability += .47f;
             independentProbability += .11f;
-        } else if(person.mEducationLevel == EducationLevel.COLLEGE_GRADUATE) {
+        } else if(person.mEducationLevel.getType() == EducationLevel.COLLEGE_GRADUATE) {
             republicanProbability += .40f;
             democraticProbability += .52f;
             independentProbability += .8f;
-        } else if(person.mEducationLevel == EducationLevel.POST_GRADUATE) {
+        } else if(person.mEducationLevel.getType() == EducationLevel.POST_GRADUATE) {
             republicanProbability += 36.f;
             democraticProbability += 56.f;
             independentProbability += 8.f;
@@ -118,7 +106,7 @@ public enum PoliticalView {
             independentProbability += 10.f;
         }
 
-        switch (mPoliticalView) {
+        switch (type) {
             case 0:
                 return democraticProbability / factorCount;
             case 1:
@@ -132,19 +120,19 @@ public enum PoliticalView {
 
     public static PoliticalView generatePoliticalView(Person person) {
         if(person != null && person.mGender != null && person.mRace != null && person.mEducationLevel != null && person.mAge > 0) {
-            float republican = REPUBLICAN.getProbability(person);
-            float democratic = republican + DEMOCRATIC.getProbability(person);
-            float independent = democratic + INDEPENDENT.getProbability(person);
+            float republican = getProbability(person, REPUBLICAN);
+            float democratic = republican + getProbability(person, DEMOCRATIC);
+            float independent = democratic + getProbability(person, INDEPENDENT);
 
             double random = Util.generateRandomFloatInRange(0, independent);
 
             if(random <= republican) {
-                return REPUBLICAN;
+                return new PoliticalView(REPUBLICAN);
             } else if(random > republican && random <= democratic) {
-                return DEMOCRATIC;
+                return new PoliticalView(DEMOCRATIC);
             }
 
-            return INDEPENDENT;
+            return new PoliticalView(INDEPENDENT);
         } else {
             throw new InvalidParameterException("Gender, Race, and Education Level must be set before calling this.");
         }

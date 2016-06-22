@@ -1,28 +1,42 @@
 package belief;
 
+import java.util.ArrayList;
+
 import util.Util;
 
 /**
  * Created by SStrombe on 6/13/16.
  */
 public class ReligiousEvent extends Belief {
-    ReligiousEventType mReligiousEventType;
-    float mLevel;
+    public static int RAPTURE = 0;
+    public static int END_OF_TIMES = 1;
+    public static int ENLIGHTENMENT = 2;
 
-    public ReligiousEvent(ReligiousEventType religiousEventType, float level, boolean isMajorBelief) {
-        this.mReligiousEventType = religiousEventType;
-        this.mLevel = level;
-
-        init(isMajorBelief);
+    public ReligiousEvent() {
     }
 
-    public static BeliefCategory getBeliefCategory() {
+    public ReligiousEvent(int type) {
+        mType = type;
+
+        init();
+    }
+
+    @Override
+    public BeliefCategory getBeliefCategory() {
         return BeliefCategory.RELIGIOUS_EVENTS;
     }
 
     @Override
     public String getName() {
-        return mReligiousEventType.getAsString();
+        switch (mType) {
+            case 0:
+                return "Rapture";
+            case 1:
+                return "End Of Times";
+            case 2:
+                return "Enlightenment";
+        }
+        return null;
     }
 
     @Override
@@ -31,15 +45,23 @@ public class ReligiousEvent extends Belief {
     }
 
     @Override
-    public void init(boolean isMajorBelief) {
-        if(isMajorBelief) {
-            mLevel = Util.generateRandomFloatInRange(15, 100);
-        } else {
-            double random = Math.random();
+    public void init() {
+        mLevel = Util.generateRandomFloatInRange(0f, 100f);
+    }
 
-            if(random > 0.5f) {
-                mLevel = Util.generateRandomFloatInRange(0, 0.15f);
-            }
+    @Override
+    public ArrayList<Belief> generateBeliefs() {
+        ArrayList<Belief> beliefs = new ArrayList<>();
+
+        for(int i = 0; i < getMaxNumberOfBeliefs(); i++) {
+            beliefs.add(new ReligiousEvent(i));
         }
+
+        return beliefs;
+    }
+
+    @Override
+    public int getMaxNumberOfBeliefs() {
+        return 3;
     }
 }

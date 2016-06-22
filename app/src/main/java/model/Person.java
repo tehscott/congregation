@@ -4,10 +4,18 @@ import android.util.Log;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
-import java.util.List;
 
 import belief.Belief;
-import belief.BeliefCategory;
+import personattribute.EducationLevel;
+import personattribute.Gender;
+import personattribute.MaritalStatus;
+import personattribute.Name;
+import personattribute.PoliticalView;
+import personattribute.Profession;
+import personattribute.Race;
+import personattribute.Sexuality;
+import personattribute.SocialClass;
+import util.BeliefUtils;
 import util.Util;
 
 public class Person {
@@ -59,19 +67,22 @@ public class Person {
         mName = Name.generateName(this);
 
         mSocialClass = SocialClass.generateSocialClass();
+        mEducationLevel = EducationLevel.generateEducationLevel(this);
+
         mNetWorth = generateStartingNetWorth();
         mCash = (int) (mNetWorth * .05f);
 
         mMaritalStatus = MaritalStatus.generateMaritalStatus();
         mSexuality = Sexuality.generateSexuality();
 
-        mEducationLevel = EducationLevel.generateEducationLevel(this);
         mPoliticalView = PoliticalView.generatePoliticalView(this);
 
         String[] profession = Profession.generateProfession(this);
         mProfession = profession[Profession.INDEX_PROFESSION_TITLE];
         mIncome = Integer.parseInt(profession[Profession.INDEX_PROFESSION_SALARY]);
         mDebt = generateStartingDebt();
+
+        mBeliefs = BeliefUtils.generateBeliefs();
     }
 
     // http://www.census.gov/prod/cen2010/briefs/c2010br-03.pdf
@@ -98,19 +109,19 @@ public class Person {
 
     //http://www.fool.com/investing/general/2015/05/17/americans-average-net-worth-by-age-how-do-you-comp.aspx
     private long generateStartingNetWorth() {
-        if(mSocialClass != null) {
+        if(mSocialClass != null && mEducationLevel != null) {
             long baseNetWorth = 0;
             float variation = 1;
 
-            if (mSocialClass == SocialClass.LOWER) {
+            if (mSocialClass.getType() == SocialClass.LOWER) {
                 baseNetWorth = 15000;
-            } else if (mSocialClass == SocialClass.WORKING) {
+            } else if (mSocialClass.getType() == SocialClass.WORKING) {
                 baseNetWorth = 30000;
-            } else if (mSocialClass == SocialClass.MIDDLE) {
+            } else if (mSocialClass.getType() == SocialClass.MIDDLE) {
                 baseNetWorth = 170000;
-            } else if (mSocialClass == SocialClass.UPPER) {
+            } else if (mSocialClass.getType() == SocialClass.UPPER) {
                 baseNetWorth = 350000;
-            } else if (mSocialClass == SocialClass.ELITE) {
+            } else if (mSocialClass.getType() == SocialClass.ELITE) {
                 baseNetWorth = 3500000;
             } else {
                 baseNetWorth = 6000000000L;
@@ -130,13 +141,13 @@ public class Person {
 
             float netWorth = baseNetWorth * variation;
 
-            if(mEducationLevel == EducationLevel.HIGH_SCHOOL) {
+            if(mEducationLevel.getType() == EducationLevel.HIGH_SCHOOL) {
                 variation = 0.5f;
-            } else if(mEducationLevel == EducationLevel.SOME_COLLEGE) {
+            } else if(mEducationLevel.getType() == EducationLevel.SOME_COLLEGE) {
                 variation = 1f;
-            } else if(mEducationLevel == EducationLevel.COLLEGE_GRADUATE) {
+            } else if(mEducationLevel.getType() == EducationLevel.COLLEGE_GRADUATE) {
                 variation = 1.5f;
-            } else if(mEducationLevel == EducationLevel.POST_GRADUATE) {
+            } else if(mEducationLevel.getType() == EducationLevel.POST_GRADUATE) {
                 variation = 1.25f;
             }
 
@@ -148,7 +159,7 @@ public class Person {
 
             return (long) netWorth;
         } else {
-            throw new IllegalStateException("Social Class must be set before calling this.");
+            throw new IllegalStateException("Social Class and Education Level must be set before calling this.");
         }
     }
 
@@ -157,25 +168,25 @@ public class Person {
         float maxDebt = 0;
         float debtMultiplier = 0;
 
-        if(mEducationLevel == EducationLevel.HIGH_SCHOOL) {
+        if(mEducationLevel.getType() == EducationLevel.HIGH_SCHOOL) {
             maxDebt = 5000;
-        } else if(mEducationLevel == EducationLevel.SOME_COLLEGE) {
+        } else if(mEducationLevel.getType() == EducationLevel.SOME_COLLEGE) {
             maxDebt = 10000;
-        } else if(mEducationLevel == EducationLevel.COLLEGE_GRADUATE) {
+        } else if(mEducationLevel.getType() == EducationLevel.COLLEGE_GRADUATE) {
             maxDebt = 40000;
-        } else if(mEducationLevel == EducationLevel.POST_GRADUATE) {
+        } else if(mEducationLevel.getType() == EducationLevel.POST_GRADUATE) {
             maxDebt = 200000;
         }
 
-        if (mSocialClass == SocialClass.LOWER) {
+        if (mSocialClass.getType() == SocialClass.LOWER) {
             debtMultiplier = 1f;
-        } else if (mSocialClass == SocialClass.WORKING) {
+        } else if (mSocialClass.getType() == SocialClass.WORKING) {
             debtMultiplier = .9f;
-        } else if (mSocialClass == SocialClass.MIDDLE) {
+        } else if (mSocialClass.getType() == SocialClass.MIDDLE) {
             debtMultiplier = .75f;
-        } else if (mSocialClass == SocialClass.UPPER) {
+        } else if (mSocialClass.getType() == SocialClass.UPPER) {
             debtMultiplier = .5f;
-        } else if (mSocialClass == SocialClass.ELITE) {
+        } else if (mSocialClass.getType() == SocialClass.ELITE) {
             debtMultiplier = 0f;
         } else {
             debtMultiplier = 0f;
@@ -190,37 +201,37 @@ public class Person {
             float weight = 0;
 
             if(mAge <= 29) {
-                if(mGender == Gender.MALE) {
+                if(mGender.getType() == Gender.MALE) {
                     weight = 183.4f;
                 } else {
                     weight = 156.5f;
                 }
             } else if(mAge >= 30 && mAge <= 39) {
-                if(mGender == Gender.MALE) {
+                if(mGender.getType() == Gender.MALE) {
                     weight = 189.1f;
                 } else {
                     weight = 163f;
                 }
             } else if(mAge >= 40 && mAge <= 49) {
-                if(mGender == Gender.MALE) {
+                if(mGender.getType() == Gender.MALE) {
                     weight = 196f;
                 } else {
                     weight = 168.2f;
                 }
             } else if(mAge >= 50 && mAge <= 59) {
-                if(mGender == Gender.MALE) {
+                if(mGender.getType() == Gender.MALE) {
                     weight = 195.4f;
                 } else {
                     weight = 169.2f;
                 }
             } else if(mAge >= 60 && mAge <= 74) {
-                if(mGender == Gender.MALE) {
+                if(mGender.getType() == Gender.MALE) {
                     weight = 191.5f;
                 } else {
                     weight = 164.7f;
                 }
             } else {
-                if(mGender == Gender.MALE) {
+                if(mGender.getType() == Gender.MALE) {
                     weight = 172.7f;
                 } else {
                     weight = 146.6f;
@@ -239,37 +250,37 @@ public class Person {
             float height = 0; // inches
 
             if(mAge <= 29) {
-                if(mGender == Gender.MALE) {
+                if(mGender.getType() == Gender.MALE) {
                     height = 69.6f;
                 } else {
                     height = 64.1f;
                 }
             } else if(mAge >= 30 && mAge <= 39) {
-                if(mGender == Gender.MALE) {
+                if(mGender.getType() == Gender.MALE) {
                     height = 69.5f;
                 } else {
                     height = 64.2f;
                 }
             } else if(mAge >= 40 && mAge <= 49) {
-                if(mGender == Gender.MALE) {
+                if(mGender.getType() == Gender.MALE) {
                     height = 69.7f;
                 } else {
                     height = 64.3f;
                 }
             } else if(mAge >= 50 && mAge <= 59) {
-                if(mGender == Gender.MALE) {
+                if(mGender.getType() == Gender.MALE) {
                     height = 69.2f;
                 } else {
                     height = 63.9f;
                 }
             } else if(mAge >= 60 && mAge <= 74) {
-                if(mGender == Gender.MALE) {
+                if(mGender.getType() == Gender.MALE) {
                     height = 68.6f;
                 } else {
                     height = 63f;
                 }
             } else {
-                if(mGender == Gender.MALE) {
+                if(mGender.getType() == Gender.MALE) {
                     height = 67.4f;
                 } else {
                     height = 62f;
@@ -284,12 +295,6 @@ public class Person {
         }
     }
 
-    private List<Belief> generateStartingBeliefs() {
-        for (BeliefCategory beliefCategory : BeliefCategory.values()) {
-
-        }
-    }
-
     public String getHeightString() {
         int feet = (int)(mHeight / 12);
         int inches = (int)(mHeight % 12);
@@ -299,26 +304,36 @@ public class Person {
 
     @Override
     public String toString() {
-        return "Name: " + mName + "\n" +
+        String data ="Name: " + mName + "\n" +
                 "Weight: " + mWeight + " lbs" + "\n" +
                 "Height: " + getHeightString() + "\n" +
                 "Age: " + mAge + "\n" +
                 "Gender: " + mGender + "\n" +
                 "Race: " + mRace + "\n" +
-                "Sexuality: " + mSexuality.getAsString() + "\n" +
-                "Marital Status: " + mMaritalStatus.getAsString() + "\n" +
-                "Social Class: " + mSocialClass.getAsString() + "\n" +
-                "Education Level: " + mEducationLevel.getAsString() + "\n" +
+                "Sexuality: " + mSexuality.getName() + "\n" +
+                "Marital Status: " + mMaritalStatus.getName() + "\n" +
+                "Social Class: " + mSocialClass.getName() + "\n" +
+                "Education Level: " + mEducationLevel.getName() + "\n" +
                 "Profession: " + mProfession + "\n" +
                 "Income: " + mIncome + "\n" +
                 "Cash: " + mCash + "\n" +
                 "Net Worth: " + mNetWorth + "\n" +
                 "Debt: " + mDebt + "\n" +
-                "Political View: " + mPoliticalView.getAsString() + "\n" +
+                "Political View: " + mPoliticalView.getName() + "\n" +
                 "Faith: " + mFaithLevel + "\n" +
                 "Gullibility: " + mGullibilityLevel + "\n" +
                 "Desire: " + mDesireLevel + "\n" +
                 "Morality: " + mMoralityLevel + "\n" +
-                "Devotion: " + mDevotionLevel + "\n\n";
+                "Devotion: " + mDevotionLevel + "\n";
+
+        if(mBeliefs != null) {
+            for (Belief mBelief : mBeliefs) {
+                data += mBelief.getName() + ": " + mBelief.getLevel() + "\n";
+            }
+
+            data += "\n";
+        }
+
+        return data;
     }
 }

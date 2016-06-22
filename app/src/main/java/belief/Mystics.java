@@ -1,28 +1,48 @@
 package belief;
 
+import java.util.ArrayList;
+
 import util.Util;
 
 /**
  * Created by SStrombe on 6/13/16.
  */
 public class Mystics extends Belief {
-    MysticsType mMysticsType;
-    float mLevel;
+    public static int MAGIC = 0;
+    public static int WITCHCRAFT = 1;
+    public static int VOODOO = 2;
+    public static int SORCERY = 3;
+    public static int TIME_TRAVEL = 4;
 
-    public Mystics(MysticsType mysticsType, float level, boolean isMajorBelief) {
-        this.mMysticsType = mysticsType;
-        this.mLevel = level;
-
-        init(isMajorBelief);
+    public Mystics() {
     }
 
-    public static BeliefCategory getBeliefCategory() {
+    public Mystics(int type) {
+        mType = type;
+
+        init();
+    }
+
+    @Override
+    public BeliefCategory getBeliefCategory() {
         return BeliefCategory.MYSTICS;
     }
 
     @Override
     public String getName() {
-        return mMysticsType.getAsString();
+        switch (mType) {
+            case 0:
+                return "Magic";
+            case 1:
+                return "Witchcraft";
+            case 2:
+                return "Voodoo";
+            case 3:
+                return "Sorcery";
+            case 4:
+                return "Time Travel";
+        }
+        return null;
     }
 
     @Override
@@ -31,15 +51,23 @@ public class Mystics extends Belief {
     }
 
     @Override
-    public void init(boolean isMajorBelief) {
-        if(isMajorBelief) {
-            mLevel = Util.generateRandomFloatInRange(15, 100);
-        } else {
-            double random = Math.random();
+    public void init() {
+        mLevel = Util.generateRandomFloatInRange(0f, 100f);
+    }
 
-            if(random > 0.5f) {
-                mLevel = Util.generateRandomFloatInRange(0, 0.15f);
-            }
+    @Override
+    public ArrayList<Belief> generateBeliefs() {
+        ArrayList<Belief> beliefs = new ArrayList<>();
+
+        for(int i = 0; i < getMaxNumberOfBeliefs(); i++) {
+            beliefs.add(new Mystics(i));
         }
+
+        return beliefs;
+    }
+
+    @Override
+    public int getMaxNumberOfBeliefs() {
+        return 5;
     }
 }

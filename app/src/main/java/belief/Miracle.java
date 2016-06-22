@@ -1,28 +1,42 @@
 package belief;
 
+import java.util.ArrayList;
+
 import util.Util;
 
 /**
  * Created by SStrombe on 6/13/16.
  */
 public class Miracle extends Belief {
-    MiracleType mMiracleType;
-    float mLevel;
+    public static int HEALING = 0;
+    public static int RESURRECTION = 1;
+    public static int REANIMATION = 2;
 
-    public Miracle(MiracleType miracleType, float level, boolean isMajorBelief) {
-        this.mMiracleType = miracleType;
-        this.mLevel = level;
-
-        init(isMajorBelief);
+    public Miracle() {
     }
 
-    public static BeliefCategory getBeliefCategory() {
+    public Miracle(int type) {
+        mType = type;
+
+        init();
+    }
+
+    @Override
+    public BeliefCategory getBeliefCategory() {
         return BeliefCategory.MIRACLES;
     }
 
     @Override
     public String getName() {
-        return mMiracleType.getAsString();
+        switch (mType) {
+            case 0:
+                return "Healing";
+            case 1:
+                return "Resurrection";
+            case 2:
+                return "Reanimation";
+        }
+        return null;
     }
 
     @Override
@@ -31,15 +45,23 @@ public class Miracle extends Belief {
     }
 
     @Override
-    public void init(boolean isMajorBelief) {
-        if(isMajorBelief) {
-            mLevel = Util.generateRandomFloatInRange(15, 100);
-        } else {
-            double random = Math.random();
+    public void init() {
+        mLevel = Util.generateRandomFloatInRange(0f, 100f);
+    }
 
-            if(random > 0.5f) {
-                mLevel = Util.generateRandomFloatInRange(0, 0.15f);
-            }
+    @Override
+    public ArrayList<Belief> generateBeliefs() {
+        ArrayList<Belief> beliefs = new ArrayList<>();
+
+        for(int i = 0; i < getMaxNumberOfBeliefs(); i++) {
+            beliefs.add(new Miracle(i));
         }
+
+        return beliefs;
+    }
+
+    @Override
+    public int getMaxNumberOfBeliefs() {
+        return 3;
     }
 }

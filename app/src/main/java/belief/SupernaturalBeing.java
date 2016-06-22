@@ -1,28 +1,48 @@
 package belief;
 
+import java.util.ArrayList;
+
 import util.Util;
 
 /**
  * Created by SStrombe on 6/13/16.
  */
 public class SupernaturalBeing extends Belief {
-    SupernaturalBeingType mSupernaturalBeingType;
-    float mLevel;
+    public static int GODS = 0;
+    public static int ANGELS = 1;
+    public static int ALIENS = 2;
+    public static int MYTHICAL_CREATURES = 3;
+    public static int COSMIC_BEINGS = 4;
 
-    public SupernaturalBeing(SupernaturalBeingType supernaturalBeingType, float level, boolean isMajorBelief) {
-        this.mSupernaturalBeingType = supernaturalBeingType;
-        this.mLevel = level;
-
-        init(isMajorBelief);
+    public SupernaturalBeing() {
     }
 
-    public static BeliefCategory getBeliefCategory() {
+    public SupernaturalBeing(int type) {
+        mType = type;
+
+        init();
+    }
+
+    @Override
+    public BeliefCategory getBeliefCategory() {
         return BeliefCategory.SUPERNATURAL_BEINGS;
     }
 
     @Override
     public String getName() {
-        return mSupernaturalBeingType.getAsString();
+        switch (mType) {
+            case 0:
+                return "Gods";
+            case 1:
+                return "Angels";
+            case 2:
+                return "Aliens";
+            case 3:
+                return "Mythical Creatures";
+            case 4:
+                return "Cosmic Beings";
+        }
+        return null;
     }
 
     @Override
@@ -31,15 +51,23 @@ public class SupernaturalBeing extends Belief {
     }
 
     @Override
-    public void init(boolean isMajorBelief) {
-        if(isMajorBelief) {
-            mLevel = Util.generateRandomFloatInRange(15, 100);
-        } else {
-            double random = Math.random();
+    public void init() {
+        mLevel = Util.generateRandomFloatInRange(0f, 100f);
+    }
 
-            if(random > 0.5f) {
-                mLevel = Util.generateRandomFloatInRange(0, 0.15f);
-            }
+    @Override
+    public ArrayList<Belief> generateBeliefs() {
+        ArrayList<Belief> beliefs = new ArrayList<>();
+
+        for(int i = 0; i < getMaxNumberOfBeliefs(); i++) {
+            beliefs.add(new SupernaturalBeing(i));
         }
+
+        return beliefs;
+    }
+
+    @Override
+    public int getMaxNumberOfBeliefs() {
+        return 5;
     }
 }

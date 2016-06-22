@@ -1,45 +1,31 @@
-package model;
+package personattribute;
 
 import java.security.InvalidParameterException;
 
+import model.Person;
 import util.Util;
 
 /**
  * Created by SStrombe on 6/9/16.
  */
-public enum EducationLevel {
-    HIGH_SCHOOL(0),
-    SOME_COLLEGE(1),
-    COLLEGE_GRADUATE(2),
-    POST_GRADUATE(3);
+public class EducationLevel extends PersonAttribute {
+    public static int HIGH_SCHOOL = 0;
+    public static int SOME_COLLEGE = 1;
+    public static int COLLEGE_GRADUATE = 2;
+    public static int POST_GRADUATE = 3;
 
-    private int mEducationLevel;
-
-    EducationLevel(int educationLevel) {
-        mEducationLevel = educationLevel;
+    public EducationLevel(int type) {
+        mType = type;
     }
 
-    public int getAsInt() {
-        return mEducationLevel;
+    @Override
+    public int getTypeCount() {
+        return 4;
     }
 
-    public static EducationLevel getFromInt(int educationLevel) {
-
-        switch (educationLevel) {
-            case 0:
-                return HIGH_SCHOOL;
-            case 1:
-                return SOME_COLLEGE;
-            case 2:
-                return COLLEGE_GRADUATE;
-            case 3:
-                return POST_GRADUATE;
-        }
-        return null;
-    }
-
-    public String getAsString() {
-        switch (mEducationLevel) {
+    @Override
+    public String getName() {
+        switch (mType) {
             case 0:
                 return "High School";
             case 1:
@@ -52,42 +38,66 @@ public enum EducationLevel {
         return null;
     }
 
+    public static EducationLevel generateEducationLevel(Person person) {
+        if(person != null && person.mGender != null && person.mRace != null && person.mAge > 0 && person.mSocialClass != null) {
+            float highSchool = getProbability(person, HIGH_SCHOOL);
+            float someCollege = highSchool + getProbability(person, SOME_COLLEGE);
+            float collegeGraduate = someCollege + getProbability(person, COLLEGE_GRADUATE);
+            float postGraduate = collegeGraduate + getProbability(person, POST_GRADUATE);
+
+            double random = Util.generateRandomFloatInRange(0, postGraduate);
+
+            // TODO: this is not returning the right kind of education for super elites (and probably others)
+            if(random >= postGraduate) {
+                return new EducationLevel(POST_GRADUATE);
+            } else if(random < postGraduate && random >= collegeGraduate) {
+                return new EducationLevel(COLLEGE_GRADUATE);
+            } else if(random < collegeGraduate && random >= someCollege) {
+                return new EducationLevel(SOME_COLLEGE);
+            }
+
+            return new EducationLevel(HIGH_SCHOOL);
+        } else {
+            throw new InvalidParameterException("Gender, Race, Age, and Social Class must be set before calling this.");
+        }
+    }
+
     // https://www.census.gov/content/dam/Census/library/publications/2016/demo/p20-578.pdf
-    public float getProbability(Person person) {
+    private static float getProbability(Person person, int type) {
         float highSchoolProbability = 0;
         float someCollegeProbability = 0;
         float collegeGraduateProbability = 0;
         float postGraduateProbability = 0;
         int factorCount = 4;
 
-        if(person.mGender == Gender.MALE) {
+        if(person.mGender.getType() == Gender.MALE) {
             highSchoolProbability += .88f;
             someCollegeProbability += .576f;
             collegeGraduateProbability += .323f;
             postGraduateProbability += .12f;
-        } else if(person.mGender == Gender.FEMALE) {
+        } else if(person.mGender.getType() == Gender.FEMALE) {
             highSchoolProbability += .888f;
             someCollegeProbability += .601f;
             collegeGraduateProbability += .327f;
             postGraduateProbability += .12f;
         }
 
-        if(person.mRace == Race.WHITE) {
+        if(person.mRace.getType() == Race.WHITE) {
             highSchoolProbability += .88f;
             someCollegeProbability += .592f;
             collegeGraduateProbability += .328f;
             postGraduateProbability += .121f;
-        } else if(person.mRace == Race.BLACK) {
+        } else if(person.mRace.getType() == Race.BLACK) {
             highSchoolProbability += .87f;
             someCollegeProbability += .529f;
             collegeGraduateProbability += .225f;
             postGraduateProbability += .082f;
-        } else if(person.mRace == Race.HISPANIC) {
+        } else if(person.mRace.getType() == Race.HISPANIC) {
             highSchoolProbability += .667f;
             someCollegeProbability += .368f;
             collegeGraduateProbability += .155f;
             postGraduateProbability += 047f;
-        } else if(person.mRace == Race.ASIAN) {
+        } else if(person.mRace.getType() == Race.ASIAN) {
             highSchoolProbability += .891f;
             someCollegeProbability += .70f;
             collegeGraduateProbability += .539f;
@@ -116,29 +126,29 @@ public enum EducationLevel {
             postGraduateProbability += .113f;
         }
 
-        if(person.mSocialClass == SocialClass.MIDDLE) {
+        if(person.mSocialClass.getType() == SocialClass.MIDDLE) {
             highSchoolProbability = 0;
             someCollegeProbability = .1f * factorCount;
             collegeGraduateProbability = .25f * factorCount;
             postGraduateProbability = .4f * factorCount;
-        } else if(person.mSocialClass == SocialClass.UPPER) {
+        } else if(person.mSocialClass.getType() == SocialClass.UPPER) {
             highSchoolProbability = 0;
             someCollegeProbability = .05f * factorCount;
             collegeGraduateProbability = .2f * factorCount;
             postGraduateProbability = .35f * factorCount;
-        } else if(person.mSocialClass == SocialClass.ELITE) {
+        } else if(person.mSocialClass.getType() == SocialClass.ELITE) {
             highSchoolProbability = 0;
             someCollegeProbability = 0;
             collegeGraduateProbability = 0;
             postGraduateProbability = .3f * factorCount;
-        } else if(person.mSocialClass == SocialClass.SUPER_ELITE) {
+        } else if(person.mSocialClass.getType() == SocialClass.SUPER_ELITE) {
             highSchoolProbability = 0;
             someCollegeProbability = 0;
             collegeGraduateProbability = 0;
             postGraduateProbability = .3f * factorCount;
         }
 
-        switch (mEducationLevel) {
+        switch (type) {
             case 0:
                 return someCollegeProbability / factorCount;
             case 1:
@@ -150,31 +160,5 @@ public enum EducationLevel {
         }
 
         return -1;
-    }
-
-    public static EducationLevel generateEducationLevel(Person person) {
-        if(person != null && person.mGender != null && person.mRace != null && person.mAge > 0 && person.mSocialClass != null) {
-            float highSchool = HIGH_SCHOOL.getProbability(person);
-            float someCollege = highSchool + SOME_COLLEGE.getProbability(person);
-            float collegeGraduate = someCollege + COLLEGE_GRADUATE.getProbability(person);
-            float postGraduate = collegeGraduate + POST_GRADUATE.getProbability(person);
-
-            double random = Util.generateRandomFloatInRange(0, postGraduate);
-
-
-
-            // TODO: this is not returning the right kind of education for super elites (and probably others)
-            if(random >= postGraduate) {
-                return POST_GRADUATE;
-            } else if(random < postGraduate && random >= collegeGraduate) {
-                return COLLEGE_GRADUATE;
-            } else if(random < collegeGraduate && random >= someCollege) {
-                return SOME_COLLEGE;
-            }
-
-            return HIGH_SCHOOL;
-        } else {
-            throw new InvalidParameterException("Gender, Race, Age, and Social Class must be set before calling this.");
-        }
     }
 }
