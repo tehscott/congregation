@@ -3,6 +3,7 @@ package com.stromberg.scott.congregation.activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.stromberg.scott.congregation.R;
@@ -28,13 +29,18 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 int peopleToGenerate = 10;
 
+                ((TextView) findViewById(R.id.output)).setText("Generating " + peopleToGenerate + " people:");
+
                 for(int i = 0; i < peopleToGenerate; i++) {
                     Person person = new Person();
 
                     game.getPopulation().addPerson(person);
 
+                    ((TextView) findViewById(R.id.output)).setText(((TextView) findViewById(R.id.output)).getText() + "\n" + person.toString());
+
                     //Log.i("PERSON", person.toString());
                 }
+
 
                 Toast.makeText(MainActivity.this, peopleToGenerate + " people generated", Toast.LENGTH_SHORT).show();
             }
