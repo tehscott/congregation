@@ -2,14 +2,13 @@ package com.stromberg.scott.congregation.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.stromberg.scott.congregation.R;
 
-import model.Game;
-import personattribute.Name;
-import model.Person;
+import com.stromberg.scott.congregation.model.Game;
+import com.stromberg.scott.congregation.model.Person;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,13 +26,17 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for(int i = 0; i < 1000; i++) {
+                int peopleToGenerate = 10;
+
+                for(int i = 0; i < peopleToGenerate; i++) {
                     Person person = new Person();
 
                     game.getPopulation().addPerson(person);
 
                     //Log.i("PERSON", person.toString());
                 }
+
+                Toast.makeText(MainActivity.this, peopleToGenerate + " people generated", Toast.LENGTH_SHORT).show();
             }
         });
     }
