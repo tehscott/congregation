@@ -306,8 +306,8 @@ public class Person {
                 "Weight: " + mWeight + " lbs" + "\n" +
                 "Height: " + getHeightString() + "\n" +
                 "Age: " + mAge + "\n" +
-                "Gender: " + mGender + "\n" +
-                "Race: " + mRace + "\n" +
+                "Gender: " + mGender.getName() + "\n" +
+                "Race: " + mRace.getName() + "\n" +
                 "Sexuality: " + mSexuality.getName() + "\n" +
                 "Marital Status: " + mMaritalStatus.getName() + "\n" +
                 "Social Class: " + mSocialClass.getName() + "\n" +
